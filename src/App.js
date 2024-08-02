@@ -1,50 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import MoviesList from './components/MoviesList';
 import './App.css';
 
 function App() {
+	const [movies, setMovies] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState(null);
+	const [stopButton, setStopButton] = useState(false)
+	const [fetchTimeOut, setFetchTimeOut] = useState(null)
 
-	const [movies, setMovies] = useState([])
-	const [isLoading, setIsLoading] = useState(false)
-	const [error, setError] = useState(null)
+	useEffect(() => {
+		fetchMoviesHandler();
+	}, []);
 
-	const fetchMoviesHandler = async function () {
-		setIsLoading(true)
-		setError(null)
+	async function fetchMoviesHandler() {
+		setIsLoading(true);
+		setError(null);
+
 		try {
-			const response = await fetch('https://swapi.py4e.com/api/films')
+			const response = await fetch('https://swapi.dev/api/films');
 			if (!response.ok) {
-				throw new Error('Something went wrong')
+				throw new Error('Something went wrong...Retrying');
 			}
-			const data = await response.json()
+
+			const data = await response.json();
 			const transformedMovies = data.results.map((movieData) => {
 				return {
 					id: movieData.episode_id,
 					title: movieData.title,
 					openingText: movieData.opening_crawl,
 					releaseDate: movieData.release_date,
-				}
-			})
-			setMovies(transformedMovies)
-		} catch (err) {
-			setError(err.message)
+				};
+			});
+			setMovies(transformedMovies);
+		} catch (error) {
+			setError(error.message);
+			retryFetchMoviesHandler();
 		}
-		setIsLoading(false)
+		setIsLoading(false);
+
+		function retryFetchMoviesHandler() {
+			setStopButton(true)
+			// here state is used to clear the timeout outside the function
+			setFetchTimeOut(setTimeout(() => {
+				fetchMoviesHandler();
+			}, 5000)
+			)
+		}
 	}
 
-	let content = <p>No movies found.</p>
-
-	if(error) {
-		content = <p>{error}</p>
+	function stopTimeOutHandler() {
+		clearTimeout(fetchTimeOut);
+		setStopButton(false)
 	}
 
-	if(movies.length > 0) {
-		content = <MoviesList movies={movies} />
+	let content = <p>No movies found</p>;
+
+	if (error) {
+		content = <p>{error}</p>;
 	}
 
-	if(isLoading) {
-		content = <p>Loading...</p>
+	if (movies.length > 0) {
+		content = <MoviesList movies={movies} />;
+	}
+
+	if (isLoading) {
+		content = <p>Loading...</p>;
 	}
 
 	return (
@@ -54,7 +76,9 @@ function App() {
 			</section>
 			<section>
 				{content}
+				{stopButton && <button onClick={stopTimeOutHandler}>stop</button>}
 			</section>
+
 		</React.Fragment>
 	);
 }

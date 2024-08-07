@@ -1,0 +1,34 @@
+.formbody{
+    text-align: left;
+    margin: 2rem;
+    padding: 2rem;
+    border-radius: 12px;
+    
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
+.buttons{
+    display: flex;
+    justify-content: end;
+}
+
+.inputTitle{
+    font-weight: bold;
+}
+
+.cancelBtn{
+    background: white;
+    border: 1px solid #230052;
+    color: #230052;
+    margin-left: 5px;
+}
+
+.cancelBtn:hover{
+    color: white;
+}
+
+.formInput{
+    padding: 9px;
+    border-radius: 10px;
+    width: 100%;
+}

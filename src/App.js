@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import MoviesList from './components/MoviesList';
 import './App.css';
@@ -10,11 +10,7 @@ function App() {
 	const [stopButton, setStopButton] = useState(false)
 	const [fetchTimeOut, setFetchTimeOut] = useState(null)
 
-	useEffect(() => {
-		fetchMoviesHandler();
-	}, []);
-
-	async function fetchMoviesHandler() {
+	const fetchMoviesHandler = useCallback(async () => {
 		setIsLoading(true);
 		setError(null);
 
@@ -48,7 +44,11 @@ function App() {
 			}, 5000)
 			)
 		}
-	}
+	}, [])
+
+	useEffect(() => {
+		fetchMoviesHandler();
+	}, [fetchMoviesHandler]);
 
 	function stopTimeOutHandler() {
 		clearTimeout(fetchTimeOut);

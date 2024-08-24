@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import classes from './AddMovie.module.css';
 
-const AddMovie = () => {
+const AddMovie = (props) => {
 
     const [show, setShow] = useState(false)
     const [title, setTitle] = useState('')
@@ -26,12 +26,12 @@ const AddMovie = () => {
             releaseDate
         }
 
+        props.AddMovie(NewMovieObj)
+
         setTitle('')
         setOpeningText('')
         setReleaseDate('')
-
         setShow(false)
-        console.log(NewMovieObj)
     }
 
     return (

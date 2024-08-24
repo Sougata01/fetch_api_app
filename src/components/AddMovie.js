@@ -4,12 +4,12 @@ import classes from './AddMovie.module.css';
 const AddMovie = (props) => {
 
     const [show, setShow] = useState(false)
-    const [title, setTitle] = useState('')
+    const [movieTitle, setMovieTitle] = useState('')
     const [openingText, setOpeningText] = useState('')
     const [releaseDate, setReleaseDate] = useState('')
 
     const titleChangeHandler = (event) => {
-        setTitle(event.target.value)
+        setMovieTitle(event.target.value)
     }
     const openingTextChangeHandler = (event) => {
         setOpeningText(event.target.value)
@@ -21,14 +21,14 @@ const AddMovie = (props) => {
     const submitHandler = (event) => {
         event.preventDefault();
         const NewMovieObj = {
-            title,
+            movieTitle,
             openingText,
             releaseDate
         }
 
         props.AddMovie(NewMovieObj)
 
-        setTitle('')
+        setMovieTitle('')
         setOpeningText('')
         setReleaseDate('')
         setShow(false)
@@ -39,7 +39,7 @@ const AddMovie = (props) => {
             {show &&
                 <form onSubmit={submitHandler} className={classes.formbody}>
                     <label className={classes.inputTitle} htmlFor='title'>Title:</label><br /><br />
-                    <input className={classes.formInput} onChange={titleChangeHandler} value={title} type='text' id='title' /><br /><br />
+                    <input className={classes.formInput} onChange={titleChangeHandler} value={movieTitle} type='text' id='title' /><br /><br />
 
                     <label className={classes.inputTitle} htmlFor='openingText'>Opening Text:</label><br /><br />
                     <textarea className={classes.formInput} id='openingText' onChange={openingTextChangeHandler} value={openingText} rows="4" cols="50" /><br /><br />
